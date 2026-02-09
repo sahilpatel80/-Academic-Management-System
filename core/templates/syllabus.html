@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Syllabus</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#135bec',
+              bgLight: '#f6f6f8'
+            },
+            fontFamily: {
+              display: ['Lexend', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      body {
+        font-family: 'Lexend', sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-bgLight text-slate-900">
+    <div class="flex min-h-screen">
+      <!-- SIDEBAR -->
+      <aside class="w-64 bg-white border-r p-6">
+        <h1 class="text-2xl font-bold text-primary mb-10">MyClassroom</h1>
+
+        <nav class="flex flex-col gap-4 text-slate-600">
+          <a href="{% url 'student_dashboard' %}" class="flex items-center gap-3 hover:text-primary"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+          <a href="{% url 'syllabus' %}" class="flex items-center gap-3 text-primary font-semibold"><span class="material-symbols-outlined">description</span> Syllabus</a>
+          <a href="{% url 'calendar' %}" class="flex items-center gap-3 hover:text-primary"><span class="material-symbols-outlined">calendar_month</span> Calendar</a>
+          <a href="{% url 'profile' %}" class="flex items-center gap-3 hover:text-primary"><span class="material-symbols-outlined">person</span> Profile</a>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="flex-1 p-8">
+        <!-- TOP BAR -->
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-2xl font-bold">Course Syllabus</h2>
+
+          <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined cursor-pointer">notifications</span>
+            <div class="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary">person</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEARCH + SEMESTER -->
+        <div class="flex justify-between items-center mb-8 gap-6">
+          <div class="relative w-1/3">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+            <input class="w-full pl-10 pr-4 py-3 bg-white border rounded-xl shadow-sm text-sm" placeholder="Search subjects or course codes" type="text" />
+          </div>
+
+          <div class="flex p-1 bg-gray-200 rounded-xl">
+            <button class="px-6 py-2 text-sm font-medium bg-white rounded-lg shadow">Fall 2024</button>
+            <button class="px-6 py-2 text-sm font-medium text-gray-500">Spring 2025</button>
+          </div>
+        </div>
+
+        <!-- SYLLABUS GRID -->
+        <div class="grid grid-cols-2 gap-6">
+          <!-- SUBJECT CARD -->
+          <div class="bg-white rounded-xl shadow border p-5">
+            <span class="text-xs font-semibold text-primary uppercase">MATH204</span>
+            <h3 class="text-lg font-bold mt-1">Mathematics</h3>
+
+            <div class="mt-4 mb-6">
+              <div class="flex justify-between mb-2">
+                <p class="text-sm text-gray-500">Topics Covered</p>
+                <p class="text-sm font-bold text-primary">75%</p>
+              </div>
+              <div class="w-full h-2 bg-gray-100 rounded-full">
+                <div class="h-full bg-primary rounded-full w-[75%]"></div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <p class="text-xs text-gray-400">Updated 2 days ago</p>
+              <button class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white">
+                <span class="material-symbols-outlined text-sm">download</span>
+                Download PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- SUBJECT CARD -->
+          <div class="bg-white rounded-xl shadow border p-5">
+            <span class="text-xs font-semibold text-primary uppercase">PHYS101</span>
+            <h3 class="text-lg font-bold mt-1">Physics</h3>
+
+            <div class="mt-4 mb-6">
+              <div class="flex justify-between mb-2">
+                <p class="text-sm text-gray-500">Topics Covered</p>
+                <p class="text-sm font-bold text-primary">40%</p>
+              </div>
+              <div class="w-full h-2 bg-gray-100 rounded-full">
+                <div class="h-full bg-primary rounded-full w-[40%]"></div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <p class="text-xs text-gray-400">Updated 1 week ago</p>
+              <button class="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg text-xs font-bold hover:bg-primary hover:text-white">
+                <span class="material-symbols-outlined text-sm">download</span>
+                Download PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

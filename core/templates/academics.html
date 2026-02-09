@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academic Calendar</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#135bec',
+        exam: '#ef4444',
+        event: '#3b82f6',
+        holiday: '#dc2626',
+        bgLight: '#f6f6f8'
+      },
+      boxShadow: {
+        soft: '8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff'
+      },
+      fontFamily: {
+        display: ['Lexend', 'sans-serif']
+      }
+    }
+  }
+}
+</script>
+
+<style>
+body { font-family: 'Lexend', sans-serif; }
+.day-3d {
+  box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+}
+</style>
+</head>
+
+<body class="bg-bgLight">
+
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="w-64 bg-white border-r p-6">
+  <h1 class="text-2xl font-bold text-primary mb-10">MyClassroom</h1>
+
+  <nav class="flex flex-col gap-4 text-slate-600">
+    <a href="{% url 'student_dashboard' %}" class="flex items-center gap-3 hover:text-primary">
+      <span class="material-symbols-outlined">home</span> Dashboard
+    </a>
+    <a href="{% url 'calendar' %}" class="flex items-center gap-3 text-primary font-semibold">
+      <span class="material-symbols-outlined">calendar_month</span> Calendar
+    </a>
+    <a href="{% url 'syllabus' %}" class="flex items-center gap-3 hover:text-primary">
+      <span class="material-symbols-outlined">school</span> syllabus
+    </a>
+    <a href="{% url 'profile' %}" class="flex items-center gap-3 hover:text-primary">
+      <span class="material-symbols-outlined">person</span> Profile
+    </a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 p-8 grid grid-cols-3 gap-8">
+
+<!-- CALENDAR -->
+<section class="col-span-2 bg-bgLight rounded-3xl shadow-soft p-8">
+
+  <!-- HEADER -->
+  <div class="flex justify-between items-center mb-6">
+    <button onclick="prevMonth()" class="p-2 rounded-full hover:bg-slate-200">
+      <span class="material-symbols-outlined">chevron_left</span>
+    </button>
+
+    <h2 id="monthYear" class="text-2xl font-bold"></h2>
+
+    <button onclick="nextMonth()" class="p-2 rounded-full hover:bg-slate-200">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </button>
+  </div>
+
+  <!-- WEEKDAYS -->
+  <div class="grid grid-cols-7 text-center font-bold text-slate-500 mb-4">
+    <span class="text-holiday">Sun</span>
+    <span>Mon</span><span>Tue</span><span>Wed</span>
+    <span>Thu</span><span>Fri</span><span>Sat</span>
+  </div>
+
+  <!-- DAYS -->
+  <div id="calendar" class="grid grid-cols-7 gap-4"></div>
+
+</section>
+
+<!-- UPCOMING EVENTS -->
+<aside class="bg-white rounded-3xl shadow-soft p-6">
+  <h3 class="text-lg font-bold mb-4">Upcoming Events</h3>
+  <ul id="upcomingEvents" class="space-y-3 text-sm"></ul>
+</aside>
+
+</main>
+</div>
+
+<!-- POPUP -->
+<div id="eventPopup" class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50">
+  <div class="bg-white rounded-2xl p-6 w-80 shadow-xl">
+    <h3 id="popupTitle" class="text-lg font-bold mb-2"></h3>
+    <p id="popupDesc" class="text-slate-600 text-sm"></p>
+    <button onclick="closePopup()" class="mt-4 bg-primary text-white px-4 py-2 rounded-lg w-full">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+/* ===== AUTO CURRENT MONTH/YEAR ===== */
+const today = new Date();
+let currentYear = today.getFullYear();   // 2026
+let currentMonth = today.getMonth();     // Feb = 1
+/* ================================= */
+
+/* ===== EVENT DATA (EDIT THIS) ===== */
+const calendarData = {
+  "2026-1": {
+    exams: {
+      10: "Mid Semester Exam",
+      22: "Final Practical Exam"
+    },
+    events: {
+      5: "Tech Workshop",
+      18: "Cultural Program"
+    },
+    holidays: {}
+  }
+};
+/* ================================= */
+
+const calendar = document.getElementById("calendar");
+const monthYear = document.getElementById("monthYear");
+const upcomingList = document.getElementById("upcomingEvents");
+
+const months = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
+
+function renderCalendar() {
+  calendar.innerHTML = "";
+  upcomingList.innerHTML = "";
+
+  const key = `${currentYear}-${currentMonth}`;
+  const data = calendarData[key] || { exams:{}, events:{}, holidays:{} };
+
+  monthYear.textContent = `${months[currentMonth]} ${currentYear}`;
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  for (let i = 0; i < firstDay; i++) calendar.innerHTML += `<div></div>`;
+
+  for (let day = 1; day <= totalDays; day++) {
+    const date = new Date(currentYear, currentMonth, day);
+    const isSunday = date.getDay() === 0;
+
+    let color = "text-slate-700";
+    let label = "No Event";
+    let badge = "";
+
+    if (data.exams[day]) {
+      color = "text-exam font-bold";
+      label = data.exams[day];
+      badge = "🔴";
+      upcomingList.innerHTML += `<li>🔴 ${day} ${months[currentMonth]} – ${label}</li>`;
+    }
+
+    if (data.events[day]) {
+      color = "text-event font-bold";
+      label = data.events[day];
+      badge = "🔵";
+      upcomingList.innerHTML += `<li>🔵 ${day} ${months[currentMonth]} – ${label}</li>`;
+    }
+
+    if (isSunday || data.holidays[day]) {
+      color = "text-holiday font-bold";
+      label = "Holiday";
+      badge = "🟥";
+    }
+
+    calendar.innerHTML += `
+      <div onclick="showEvent(${day}, '${label}')"
+        class="relative day-3d bg-bgLight rounded-2xl h-16 flex flex-col items-center justify-center hover:scale-105 transition cursor-pointer">
+        <span class="${color}">${day}</span>
+        <span class="text-xs">${badge}</span>
+      </div>
+    `;
+  }
+}
+
+function showEvent(day, text) {
+  document.getElementById("popupTitle").innerText =
+    `${day} ${months[currentMonth]} ${currentYear}`;
+  document.getElementById("popupDesc").innerText = text;
+  document.getElementById("eventPopup").classList.remove("hidden");
+  document.getElementById("eventPopup").classList.add("flex");
+}
+
+function closePopup() {
+  document.getElementById("eventPopup").classList.add("hidden");
+}
+
+function prevMonth() {
+  currentMonth--;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderCalendar();
+}
+
+function nextMonth() {
+  currentMonth++;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  renderCalendar();
+}
+
+/* LOAD REAL CURRENT CALENDAR */
+renderCalendar();
+</script>
+
+</body>
+</html>

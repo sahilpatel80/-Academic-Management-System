@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignments – Desktop</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#135bec',
+              bgLight: '#f6f6f8',
+              bgDark: '#101622'
+            },
+            fontFamily: {
+              display: ['Lexend', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      body {
+        font-family: 'Lexend', sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-bgLight min-h-screen">
+    <div class="flex min-h-screen">
+      <!-- SIDEBAR -->
+      <aside class="w-64 bg-white shadow-xl p-6 flex flex-col">
+        <h1 class="text-2xl font-bold text-primary mb-10">MyClassroom</h1>
+
+        <nav class="flex flex-col gap-4 text-slate-600">
+          <a href="{% url 'student_dashboard' %}" class="flex items-center gap-3 text-primary font-semibold"><span class="material-symbols-outlined">home</span> Home</a>
+          <a href="{% url 'assignments' %}" class="flex items-center gap-3 hover:text-primary"><span class="material-symbols-outlined">assignment</span> Assignments</a>
+
+          <a href="{% url 'classes' %}" class="flex items-center gap-3 hover:text-primary">
+            <span class="material-symbols-outlined">groups</span>
+            Classes
+          </a>
+
+          <a href="{% url 'chat' %}" class="flex items-center gap-3 hover:text-primary">
+            <span class="material-symbols-outlined">chat_bubble</span>
+            Chat
+          </a>
+
+          <a href="{% url 'settings' %}" class="flex items-center gap-3 hover:text-primary">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="flex-1 p-8">
+        <!-- TOP BAR -->
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-2xl font-bold">Assignments</h2>
+          <button class="p-3 rounded-full bg-white shadow"><span class="material-symbols-outlined">notifications</span></button>
+        </div>
+
+        <!-- TAB SWITCHER -->
+        <div class="flex max-w-sm bg-gray-200 p-1 rounded-xl mb-8">
+          <button class="flex-1 bg-white rounded-lg py-2 text-primary font-semibold shadow">Pending</button>
+          <button class="flex-1 py-2 text-gray-500 font-semibold">Submitted</button>
+        </div>
+
+        <!-- ASSIGNMENTS GRID -->
+        <div class="grid grid-cols-3 gap-6">
+          <!-- CARD 1 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow">
+            <div class="h-40 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuC7cJ-tgX1rH74BvhsRB0ZiambXwmWLP9toOSCQPXdh1-KyH-6kPfn-OjHU_p3juWZGoCOaW66oP_bQU228kZfXxfMXPT8RwybwGTjNRm55tyy4nAqNo_DCekRqa5AZteIT_cyP2kGvUrmcrTtKuCT14MO46fUMO5ETfgf0_hINDC7I4m-Ev84s8T1T2cOm5YzFiC_AML0jRZbUlmQaQQxKdSUF1T71bpDun7arf81ttNKcKPaXOwI0D9mX2gUcZuhtrUKFDWEs3iY')"></div>
+
+            <div class="p-4 space-y-3">
+              <p class="text-primary text-xs font-semibold uppercase">Mathematics</p>
+              <h3 class="font-bold text-lg">Organic Chemistry Lab Report</h3>
+
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">PDF • 2.4 MB</span>
+                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold">Submit</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow">
+            <div class="h-40 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuCsB9WvhfoCjJmTTuya-iWckHarc5RVZNpUCnJcVKea3dl9k_B98IPjCwelw-_VMk8BTxk56tr6OtoUa9TKqOAUSXVwDXI5JftDVRaBKWf3Gmm1NuBK7Qz4ddfH644ByBfJ9HM1OlgPIy_tPITp1wLdGwFCk0kz3RY3Bq08cfNEo4_eO9EwG05qcdXnJ3IYaWm3GzwRnLh89udv9zHo3vOc7Zd7qU_p7Zxyy9MNMmvChiL7IjBATj0PgCRb6LDuUlGjZUr7Ux_Kb5A')"></div>
+
+            <div class="p-4 space-y-3">
+              <p class="text-primary text-xs font-semibold uppercase">History</p>
+              <h3 class="font-bold text-lg">Industrial Revolution</h3>
+
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Essay • 1500 words</span>
+                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold">Submit</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 3 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow">
+            <div class="h-40 bg-cover bg-center" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuCIdQcMAxDwvt6CGL-I2daI9ynAXzAGAvzXMkyhl6RMcd9LyD6z4lsSxXHNPLhBYetj_ECnYZ_Ud05I6an3RI96IoUgbuKXusPCjUsQGonDU-Araqx9XO1h-0Km2W-uFpdpo_OdcLfB7DrZex2-on7nYgPppK97Ah_qz2OH6kEg-kUVKN40baFwh-nfwxqc0ISX3y1x7irFqg2yjebAbP1kxqwpvm9MjN3aLPbHYSCWcQ_X6tGpf7Vx_PB6phDzocqaFDCR-iIcqgc')"></div>
+
+            <div class="p-4 space-y-3">
+              <p class="text-primary text-xs font-semibold uppercase">Mathematics</p>
+              <h3 class="font-bold text-lg">Advanced Calculus Quiz</h3>
+
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Quiz • 10 Qs</span>
+                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
