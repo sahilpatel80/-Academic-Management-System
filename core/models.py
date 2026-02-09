@@ -17,7 +17,11 @@ class Student(models.Model):
     name = models.CharField(max_length=100)
     student_class = models.ForeignKey(ClassName, on_delete=models.CASCADE)
     dob = models.DateField()
-    photo = models.ImageField(upload_to='students/', blank=True)  # For ID Card
+    enrollment_no = models.CharField(max_length=30)
+    email = models.EmailField(max_length=100, null=True, blank=True)
+    department = models.CharField(max_length=100)
+    profile_pic = models.ImageField(
+        upload_to='students/', blank=True)  # For ID Card
 
     def __str__(self): return f"{self.name} ({self.roll_no})"
 
@@ -48,7 +52,7 @@ class AdminProfile(models.Model):
 
     def __str__(self):
         return f"Admin: {self.user.username}"
-    
+
 
 # 2. SYLLABUS & ASSIGNMENT MODELS
 

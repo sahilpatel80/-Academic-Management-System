@@ -231,11 +231,44 @@ def fees(request):
 
 
 @login_required(login_url="login")
-def profile(request):
-    performance = [70, 85, 95, 80, 90]
+def exam_results(request):
+    student = request.user.student
+    results = Result.objects.filter(student=student)
 
+    return render(request, "results.html", {
+        "student": student,
+        "results": results
+    })
+
+
+@login_required(login_url="login")
+def profile(request):
+    student = request.user.student
+
+    # Attendance
+    total_day = Attendance.objects.filter(student=student).count()
+    present_day = Attendance.objects.filter(
+        student=student, is_present=True
+    ).count()
+
+    attendance_percentage = (
+        round((present_day / total_day) * 100)
+        if total_day > 0 else 0
+    )
+
+    results = Result.objects.filter(student=student)
+    # performance = [70, 85, 95, 80, 90]
+
+    performance = []
+    for r in results:
+        performance.append(r.total_marks)
     context = {
-        "performance": performance
+        "performance": performance,
+        "student": student,
+        "attendance_percentage": attendance_percentage,
+        "persent_day": present_day,
+        "total_days": total_day,
+
     }
     return render(request, "profile.html", context)
 
@@ -281,4 +314,4 @@ def syllabus(request):
         "selected_semester": selected_semester,
     }
 
-    return render(request, "syllabus/courses.html", context)
+    return render(request, "syllabus.html", context)

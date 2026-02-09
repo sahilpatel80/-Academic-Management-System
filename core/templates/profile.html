@@ -45,9 +45,9 @@
 
           <a href="{% url 'profile' %}" class="flex items-center gap-3 text-primary font-semibold"><span class="material-symbols-outlined">person</span> Profile</a>
 
-          <a href="#" class="flex items-center gap-3 hover:text-primary"><span class="material-symbols-outlined">school</span> Grades</a>
+          <a href="{% url 'results' %}" class="flex items-center gap-3 hover:text-primary"><span class="material-symbols-outlined">school</span> Results</a>
 
-          <a href="settings" class="flex items-center gap-3 hover:text-primary"><span class="material-symbols-outlined">settings</span> Settings</a>
+          <a href="{% url 'settings' %}" class="flex items-center gap-3 hover:text-primary"><span class="material-symbols-outlined">settings</span> Settings</a>
         </nav>
       </aside>
 
@@ -67,7 +67,8 @@
           <!-- PHOTO -->
           <div class="flex flex-col items-center">
             <div class="w-32 h-32 rounded-full overflow-hidden shadow border-4 border-white bg-gray-200">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9y6VrFa-uHmqKfl4tNOeMAUP-ldTpcAh52VRUNzU2FP1nkFl23uu6iOQJNZntRhQzkuewYOpytaK-I-aaTQYMZBeNO8eMdqsjIyApg8IC48LUOZ-8guijNTnPHEnmNvbL3VAnhtzFMOdxuSXq5lm9M-c3IY9ZA9k-s_dMnDr2R0VzDCgtDEuEQ_qykNHsc8nFgmuz-ahAppPj4zo813oJ7ARzmAdXRg0fwn_RQ49DOfBrOcU0t9Wn6iE2FUekpQSuwA7pKRk2ZA0" class="w-full h-full object-cover" />
+              {% comment %} <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9y6VrFa-uHmqKfl4tNOeMAUP-ldTpcAh52VRUNzU2FP1nkFl23uu6iOQJNZntRhQzkuewYOpytaK-I-aaTQYMZBeNO8eMdqsjIyApg8IC48LUOZ-8guijNTnPHEnmNvbL3VAnhtzFMOdxuSXq5lm9M-c3IY9ZA9k-s_dMnDr2R0VzDCgtDEuEQ_qykNHsc8nFgmuz-ahAppPj4zo813oJ7ARzmAdXRg0fwn_RQ49DOfBrOcU0t9Wn6iE2FUekpQSuwA7pKRk2ZA0" class="w-full h-full object-cover" /> {% endcomment %}
+              <img src="{{ student.profile_pic.url }}" onerror="this.src='{% static 'img/user.png' %}'" class="w-full h-full object-cover" />
             </div>
             <span class="mt-3 text-green-600 text-xs font-bold">Active</span>
           </div>
@@ -76,25 +77,26 @@
           <div class="flex-1 space-y-4">
             <div>
               <h3 class="text-xl font-bold">{{ student.name }}</h3>
-              <p class="text-primary font-medium">Class 12-A • Science Stream</p>
+              <p class="text-xs text-slate-400 uppercase font-bold">Department</p>
+              <p class="text-primary font-medium">{{ student.department }}</p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div class="bg-bgLight p-4 rounded-xl">
                 <p class="text-xs text-slate-400 uppercase font-bold">Roll No</p>
-                <p class="font-semibold">2024-042</p>
+                <p class="font-semibold">{{ student.roll_no }}</p>
               </div>
 
               <div class="bg-bgLight p-4 rounded-xl">
                 <p class="text-xs text-slate-400 uppercase font-bold">Enrollment</p>
-                <p class="font-semibold">EN9920384</p>
+                <p class="font-semibold">{{ student.enrollment_no }}</p>
               </div>
 
               <div class="col-span-2 bg-bgLight p-4 rounded-xl flex items-center gap-3">
                 <span class="material-symbols-outlined text-slate-400">mail</span>
                 <div>
                   <p class="text-xs text-slate-400 uppercase font-bold">Email</p>
-                  <p class="font-semibold">a.sterling@academy.edu</p>
+                  <p class="font-semibold">{{ student.email }}</p>
                 </div>
               </div>
             </div>
@@ -119,11 +121,15 @@
               <div class="flex-1 space-y-2 text-sm">
                 <div class="flex justify-between">
                   <span>Present Days</span>
-                  <span class="font-bold">158</span>
+                  {% comment %} <span class="font-bold">158</span> {% endcomment %}
+                  <span class="font-bold">{{ present_days }}</span>
                 </div>
                 <div class="flex justify-between">
                   <span>Total Days</span>
-                  <span class="font-bold">180</span>
+
+                  <span class="font-bold">{{ total_days }}</span>
+
+                  {% comment %} <span class="font-bold">180</span> {% endcomment %}
                 </div>
                 <span class="inline-block mt-2 bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full font-bold">Above Threshold</span>
               </div>
