@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'core',           # Login/Home logic
+    'student',        # Student data
+    'staff',          # Staff data
+    'school_admin',   # Custom Admin logic
 ]
 
 MIDDLEWARE = [
@@ -119,7 +122,7 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL = 'student_dashboard'  # Where to go after login
-LOGOUT_REDIRECT_URL = 'login'            # Where to go after logout
+LOGIN_REDIRECT_URL = 'student:student_dashboard'  # Where to go after login
+LOGOUT_REDIRECT_URL = 'core:login'            # Where to go after logout
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']

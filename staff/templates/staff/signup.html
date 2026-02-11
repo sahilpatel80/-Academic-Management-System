@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Staff Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script>
+      tailwind.config = { theme: { extend: { colors: { primary: '#0f49bd', surface: '#f8fafc', muted: '#64748b' }, fontFamily: { sans: ['Inter', 'sans-serif'] } } } }
+    </script>
+  </head>
+  <body class="bg-surface min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-6xl bg-white rounded-2xl shadow-2xl overflow-hidden my-10">
+      <div class="px-8 py-6 border-b flex justify-between items-center bg-slate-50">
+        <div class="flex items-center gap-4">
+          <a href="{% url 'core:login' %}" class="p-2 rounded-full hover:bg-slate-200 text-slate-500 transition-colors"><span class="material-symbols-outlined">arrow_back</span></a>
+          <div>
+            <h1 class="text-2xl font-bold text-slate-800">Staff Registration</h1>
+            <p class="text-sm text-muted">Join the academic faculty</p>
+          </div>
+        </div>
+        <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-3xl">badge</span>
+        </div>
+      </div>
+
+      <form method="POST" enctype="multipart/form-data" class="p-8">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div class="space-y-8">
+            <section>
+              <h2 class="font-bold text-lg mb-4 flex items-center gap-2 text-slate-800"><span class="w-1 h-6 bg-primary rounded-full"></span> Login Credentials</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="text-sm text-muted">Username</label> {{ user_form.username }}
+                </div>
+                <div>
+                  <label class="text-sm text-muted">Email</label> {{ user_form.email }}
+                </div>
+                <div>
+                  <label class="text-sm text-muted">Password</label> {{ user_form.password }}
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 class="font-bold text-lg mb-4 flex items-center gap-2 text-slate-800"><span class="w-1 h-6 bg-green-500 rounded-full"></span> Personal Details</h2>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                  <label class="text-sm text-muted">Full Name</label>
+                  <input name="name" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none" required />
+                </div>
+                <div>
+                  <label class="text-sm text-muted">Date of Birth</label>
+                  <input type="date" name="dob" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none" required />
+                </div>
+                <div>
+                  <label class="text-sm text-muted">Gender</label>
+                  <select name="gender" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none">
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="O">Other</option>
+                  </select>
+                </div>
+              </div>
+            </section>  
+          </div>
+
+          <div class="space-y-8">
+            <section>
+              <h2 class="font-bold text-lg mb-4 flex items-center gap-2 text-slate-800"><span class="w-1 h-6 bg-orange-500 rounded-full"></span> Contact Info</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="text-sm text-muted">Mobile Number</label>
+                  <input name="phone_number" type="tel" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none" placeholder="9876543210" required />
+                </div>
+                <div>
+                  <label class="text-sm text-muted">Address</label>
+                  <textarea name="address" rows="2" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none" placeholder="Residential Address"></textarea>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 class="font-bold text-lg mb-4 flex items-center gap-2 text-slate-800"><span class="w-1 h-6 bg-purple-500 rounded-full"></span> Professional Info</h2>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="text-sm text-muted">College / School Name</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-3 text-slate-400">school</span>
+                    <input name="school_name" class="w-full pl-10 p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. St. Xavier's College" required />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-sm text-muted">Department</label>
+                  <select name="department" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none">
+                    <option>Science</option>
+                    <option>Commerce</option>
+                    <option>Arts</option>
+                    <option>Administration</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-sm text-muted">Designation</label>
+                  <input name="designation" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. Senior Teacher" />
+                </div>
+                <div>
+                  <label class="text-sm text-muted">Qualification</label>
+                  <input name="qualification" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. M.Sc, B.Ed" />
+                </div>
+                <div>
+                  <label class="text-sm text-muted">Experience (Yrs)</label>
+                  <input name="experience" type="number" class="w-full p-3 bg-slate-50 rounded-lg border focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. 5" />
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <label class="block text-sm font-bold text-slate-700 mb-2">Profile Photo</label>
+              <div class="flex items-center gap-4 p-4 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
+                <span class="material-symbols-outlined text-slate-400 text-3xl">add_a_photo</span>
+                <input type="file" name="profile_pic" class="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-blue-700 transition" />
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t flex justify-end">
+          <a href="{% url 'core:login' %}" class="text-sm text-slate-500 hover:text-primary transition-colors flex items-center gap-1 group">
+            <span class="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            <span>Back to Login</span>
+          </a>
+          <button type="submit" class="px-8 py-3 bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-transform active:scale-95 flex items-center gap-2">
+            <span>Register Staff</span>
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]').forEach((el) => {
+        el.classList.add('w-full', 'mt-1', 'px-4', 'py-3', 'rounded-lg', 'bg-slate-50', 'border', 'focus:ring-2', 'focus:ring-primary', 'outline-none')
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,91 @@
+{% extends 'student/base.html' %}
+{% load static %}
+
+{% block title %}
+  Results | Academic Cloud
+{% endblock %}
+
+{% block header_title %}
+  My Exam Results
+{% endblock %}
+
+{% block sidebar_menu %}
+  <a href="{% url 'student:student_dashboard' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-medium text-sm">Dashboard</span>
+  </a>
+
+  <a href="{% url 'student:exam_results' %}" class="flex items-center gap-3 px-6 py-3 bg-blue-50/50 text-primary border-r-4 border-primary transition-colors">
+    <span class="material-symbols-outlined font-variation-settings-'FILL'-1">assignment</span>
+    <span class="font-medium text-sm">Grades</span>
+  </a>
+
+  <a href="{% url 'student:profile' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-medium text-sm">Profile</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+  <div class="bg-white dark:bg-[#151b2b] rounded-2xl shadow-soft p-6 mb-8 flex flex-col md:flex-row items-center gap-6 border border-[#dbdfe6] dark:border-white/10">
+    <div class="size-20 rounded-full border-2 border-primary p-1">
+      <div class="size-full rounded-full overflow-hidden bg-gray-200">
+        {% if student.profile_pic %}
+          <img src="{{ student.profile_pic.url }}" onerror="this.onerror=null;this.src='{% static 'img/user.png' %}';" class="w-full h-full object-cover" />
+        {% else %}
+          <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+            <span class="material-symbols-outlined text-6xl">person</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="text-center md:text-left">
+      <h2 class="text-xl font-bold text-gray-800 dark:text-white">{{ student.user.first_name }} {{ student.name }}</h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+        Student ID: <span class="font-medium text-primary">{{ student.id }}</span> • Department: <span class="font-medium">{{ student.department }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-[#151b2b] rounded-2xl shadow-soft p-6 border border-[#dbdfe6] dark:border-white/10 overflow-hidden">
+    <h3 class="text-lg font-bold mb-6 text-gray-800 dark:text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary">school</span> Subject-wise Marks</h3>
+
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="text-left text-gray-500 dark:text-gray-400 text-sm border-b border-[#dbdfe6] dark:border-white/10">
+            <th class="py-3 pl-2">Subject</th>
+            <th class="py-3">Teacher</th>
+            <th class="py-3">Marks Obtained</th>
+            <th class="py-3">Status</th>
+          </tr>
+        </thead>
+
+        <tbody class="text-gray-700 dark:text-gray-200">
+          {% for r in results %}
+            <tr class="border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+              <td class="py-4 pl-2 font-semibold">{{ r.subject }}</td>
+              <td class="py-4 text-sm text-gray-500 dark:text-gray-400">{{ r.teacher }}</td>
+              <td class="py-4 font-bold text-primary">{{ r.marks }} / 100</td>
+              <td class="py-4">
+                {% if r.marks >= 35 %}
+                  <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-xs rounded-full font-bold border border-green-100 dark:border-green-900/30"><span class="size-1.5 rounded-full bg-green-500"></span> Pass</span>
+                {% else %}
+                  <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs rounded-full font-bold border border-red-100 dark:border-red-900/30"><span class="size-1.5 rounded-full bg-red-500"></span> Fail</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-center py-12 text-gray-400 flex flex-col items-center">
+                <span class="material-symbols-outlined text-4xl mb-2 opacity-50">content_paste_off</span>
+                No exam results available yet.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,317 +1,165 @@
-# from .models import Semester, Syllabus
-# from django.shortcuts import render
-# from django.shortcuts import render, redirect
-# from django.contrib.auth.decorators import login_required
-# from .models import Student, Result, Attendance
-
-
-# @login_required(login_url='login')
-# def student_dashboard(request):
-#     try:
-#         # 2. Get the Student profile linked to the currently logged-in User
-#         student_profile = request.user.student
-#     except Student.DoesNotExist:
-#         # If the user is an Admin or Staff without a student profile
-#         return render(request, 'error.html', {'message': "You are not registered as a Student."})
-#     results = Result.objects.filter(student=student_profile)
-
-#     # Calculate Attendance Percentage
-#     total_days = Attendance.objects.filter(student=student_profile).count()
-#     present_days = Attendance.objects.filter(
-#         student=student_profile, is_present=True).count()
-
-#     if total_days > 0:
-#         attendance_percentage = (present_days / total_days) * 100
-#     else:
-#         attendance_percentage = 0
-
-#     context = {
-#         'student': student_profile,
-#         'results': results,
-#         'attendance_percentage': round(attendance_percentage, 2)
-#     }
-#     return render(request, 'dashboard.html', context)
-
-
-# def academics(request):
-#     return render(request, 'academics.html')
-
-
-# def assignments(request):
-#     return render(request, 'assignments.html')
-
-
-# def fees(request):
-#     return render(request, 'fees.html')
-
-
-# def profile(request):
-#     return render(request, 'profile.html')
-
-
-# def chat(request):
-#     return render(request, 'cht.html')
-
-
-# def settings(request):
-#     return render(request, 'settings.html')
-
-
-# def classes(request):
-#     return render(request, 'classes.html')
-
-
-# def calendar(request):
-#     return render(request, 'calendar.html')
-
-
-# def syllabus(request):
-#     semesters = Semester.objects.all()
-#     selected_semester = request.GET.get('semester')
-
-#     if selected_semester:
-#         syllabus_list = Syllabus.objects.filter(semester__id=selected_semester)
-#     else:
-#         syllabus_list = Syllabus.objects.all()
-
-#     context = {
-#         'syllabus_list': syllabus_list,
-#         'semesters': semesters,
-#         'selected_semester': selected_semester,
-#     }
-#     return render(request, 'syllabus/courses.html', context)
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.contrib.auth.models import User
+from .models import Student, ClassName
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
-from .models import (
-    Student,
-    Result,
-    Attendance,
-    Semester,
-    Syllabus
-)
-
-# =========================
-# LOGIN VIEW (STUDENT / STAFF / ADMIN)
-# =========================
+from .forms import UserSignupForm, StudentSignupForm
 
 
-def user_login(request):
+def student_signup(request):
+    classes = ClassName.objects.all()
+
     if request.method == "POST":
-        role = request.POST.get("role")
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        user_form = UserSignupForm(request.POST)
+        student_form = StudentSignupForm(request.POST, request.FILES)
 
-        user = authenticate(request, username=username, password=password)
+        if user_form.is_valid() and student_form.is_valid():
+            user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password'])
+            user.save()
 
-        if user is None:
-            messages.error(request, "Invalid username or password")
-            return redirect("login")
+            student = student_form.save(commit=False)
+            student.user = user
+            student.save()
 
-        # =========================
-        # STUDENT
-        # =========================
-        if role == "student":
-            if not hasattr(user, "student"):
-                messages.error(request, "Student account not found")
-                return redirect("login")
-
-            login(request, user)
-            return redirect("student_dashboard")
-
-        # =========================
-        # STAFF
-        # =========================
-        elif role == "staff":
-            if not hasattr(user, "staff"):
-                messages.error(request, "Staff account not found")
-                return redirect("login")
-
-            login(request, user)
-            return redirect("staff_dashboard")
-
-        # =========================
-        # ADMIN
-        # =========================
-        elif role == "admin":
-            if not hasattr(user, "admin_profile"):
-                messages.error(request, "Admin account not found")
-                return redirect("login")
-
-            login(request, user)
-            return redirect("admin_dashboard")
-
+            messages.success(
+                request, "Account created successfully. Please login.")
+            return redirect('core:login')
         else:
-            messages.error(request, "Invalid role selected")
-            return redirect("login")
+            messages.error(request, "Form error. Please check details.")
 
-    return render(request, "login.html")
+    else:
+        user_form = UserSignupForm()
+        student_form = StudentSignupForm()
 
-# =========================
-# STUDENT DASHBOARD
-# =========================
-
-
-@login_required(login_url="login")
-def student_dashboard(request):
-    try:
-        student_profile = request.user.student
-    except Student.DoesNotExist:
-        return render(
-            request,
-            "error.html",
-            {"message": "You are not registered as a Student."}
-        )
-
-    results = Result.objects.filter(student=student_profile)
-
-    total_days = Attendance.objects.filter(student=student_profile).count()
-    present_days = Attendance.objects.filter(
-        student=student_profile,
-        is_present=True
-    ).count()
-
-    attendance_percentage = (
-        (present_days / total_days) * 100 if total_days > 0 else 0
-    )
-
-    context = {
-        "student": student_profile,
-        "results": results,
-        "attendance_percentage": round(attendance_percentage, 2),
-    }
-
-    return render(request, "dashboard.html", context)
-
-
-# =========================
-# STAFF DASHBOARD
-# =========================
-@login_required(login_url="login")
-def staff_dashboard(request):
-    if not hasattr(request.user, "staff"):
-        return render(request, "error.html", {
-            "message": "Staff access only"
-        })
-
-    return render(request, "staff_dashboard.html")
-
-
-# =========================
-# ADMIN DASHBOARD
-# =========================
-@login_required(login_url="login")
-def admin_dashboard(request):
-    if not hasattr(request.user, "admin_profile"):
-        return render(request, "error.html", {
-            "message": "Admin access only"
-        })
-
-    return render(request, "admin_dashboard.html")
-
-
-# =========================
-# SIMPLE PAGES
-# =========================
-@login_required(login_url="login")
-def academics(request):
-    return render(request, "academics.html")
-
-
-@login_required(login_url="login")
-def assignments(request):
-    return render(request, "assignments.html")
-
-
-@login_required(login_url="login")
-def fees(request):
-    return render(request, "fees.html")
-
-
-@login_required(login_url="login")
-def exam_results(request):
-    student = request.user.student
-    results = Result.objects.filter(student=student)
-
-    return render(request, "results.html", {
-        "student": student,
-        "results": results
+    return render(request, 'core/signup.html', {
+        'user_form': user_form,
+        'student_form': student_form,
+        'classes': classes
     })
 
 
-@login_required(login_url="login")
-def profile(request):
-    student = request.user.student
+# def user_login(request):
+#     if request.method == "POST":
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
 
-    # Attendance
-    total_day = Attendance.objects.filter(student=student).count()
-    present_day = Attendance.objects.filter(
-        student=student, is_present=True
-    ).count()
+#         user = authenticate(request, username=username, password=password)
 
-    attendance_percentage = (
-        round((present_day / total_day) * 100)
-        if total_day > 0 else 0
-    )
+#         if user:
+#             login(request, user)
+#             return redirect('student_dashboard')  # ✅ FIXED
+#         else:
+#             messages.error(request, "Invalid username or password")
+#             return redirect('login')
 
-    results = Result.objects.filter(student=student)
-    # performance = [70, 85, 95, 80, 90]
+#     return render(request, 'core/login.html')
 
-    performance = []
-    for r in results:
-        performance.append(r.total_marks)
-    context = {
-        "performance": performance,
-        "student": student,
-        "attendance_percentage": attendance_percentage,
-        "persent_day": present_day,
-        "total_days": total_day,
+def user_login(request):
+    # 1. If the user is already authenticated, redirect them to their respective dashboard
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'student'):
+            return redirect('student:student_dashboard')
+        elif hasattr(request.user, 'staff'):
+            return redirect('staff:staff_dashboard')
+        elif request.user.is_superuser:
+            return redirect('admin_dashboard')
 
-    }
-    return render(request, "profile.html", context)
+    # 2. Handle Form Submission
+    if request.method == "POST":
+        # Retrieve the role (student/staff/admin) from HTML
+        role = request.POST.get("role")
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        enrollment_no = request.POST.get('enrollment_no')
+
+        user = authenticate(request, username=username,
+                            password=password, enrollment_no=enrollment_no)
+
+        if user is not None:
+            # --- START STRICT ROLE ENFORCEMENT ---
+
+            # CASE 1: User selected STUDENT
+            if role == 'student':
+                if hasattr(user, 'student'):  # Check: Does a Student profile exist for this user?
+                    login(request, user)
+                    return redirect('student:student_dashboard')
+                else:
+                    # Credentials are correct, but the user is not a Student
+                    messages.error(
+                        request, "Access Denied: This account is not registered as a Student.")
+
+            # CASE 2: User selected STAFF
+            elif role == 'staff':
+                if hasattr(user, 'staff'):    # Check: Does a Staff profile exist for this user?
+                    login(request, user)
+                    return redirect('staff_dashboard')
+                else:
+                    messages.error(
+                        request, "Access Denied: This account is not registered as Staff.")
+
+            # CASE 3: User selected ADMIN
+            elif role == 'admin':
+                if user.is_superuser:         # Check: Is the user a Superuser?
+                    login(request, user)
+                    return redirect('admin_dashboard')
+                else:
+                    messages.error(
+                        request, "Access Denied: You do not have Administrator privileges.")
+
+            # Fallback if no valid role was selected
+            else:
+                messages.error(request, "Please select a valid role.")
+
+        else:
+            # Authentication failed (Invalid Username or Password)
+            messages.error(request, "Invalid Username or Password.")
+
+    return render(request, "core/login.html")
 
 
-@login_required(login_url="login")
-def chat(request):
-    return render(request, "chat.html")
+def logout_view(request):
+    logout(request)
+    return redirect('core:login')
 
 
-@login_required(login_url="login")
-def settings(request):
-    return render(request, "settings.html")
+@login_required(login_url='core:login')
+def student_dashboard(request):
+    try:
+        student = Student.objects.get(user=request.user)
+    except Student.DoesNotExist:
+        messages.error(request, "Student profile not found")
+        return redirect('core:login')
+
+    return render(request, 'student/dashboard.html', {'student': student})
 
 
-@login_required(login_url="login")
-def classes(request):
-    return render(request, "classes.html")
+# def signup_router(request):
+#     role = request.GET.get('role')
 
+#     if role == 'student':
+#         return redirect('core:signup')
+#     elif role == 'staff':
+#         return redirect('staff:signup')
+#     elif role == 'school_admin':
+#         return redirect('school_admin:admin_signup')
+#     else:
+#         messages.error(request, "Invalid Signup request")
+#         return redirect('core:login')
 
-@login_required(login_url="login")
-def calendar(request):
-    return render(request, "calendar.html")
+@login_required(login_url='core:login')
+def login_redirect(request):
+    user = request.user
 
+    if user.is_superuser:
+        return redirect('school_admin:admin_dashboard')
 
-# =========================
-# SYLLABUS
-# =========================
-@login_required(login_url="login")
-def syllabus(request):
-    semesters = Semester.objects.all()
-    selected_semester = request.GET.get("semester")
+    if hasattr(user, 'staff'):
+        return redirect('staff:staff_dashboard')
 
-    if selected_semester:
-        syllabus_list = Syllabus.objects.filter(
-            semester__id=selected_semester
-        )
-    else:
-        syllabus_list = Syllabus.objects.all()
+    if hasattr(user, 'student'):
+        return redirect('student:student_dashboard')
 
-    context = {
-        "syllabus_list": syllabus_list,
-        "semesters": semesters,
-        "selected_semester": selected_semester,
-    }
-
-    return render(request, "syllabus.html", context)
+    messages.error(request, "No role assigned to this account")
+    return redirect('core:login')

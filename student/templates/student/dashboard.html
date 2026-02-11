@@ -1,0 +1,271 @@
+{% extends 'student/base.html' %}
+{% load static %}
+
+{% block title %}
+  Dashboard | Academic Cloud
+{% endblock %}
+{% block header_title %}
+  Dashboard
+{% endblock %}
+{% block sidebar_menu %}
+  <a href="{% url 'student:student_dashboard' %}"
+    class="flex items-center gap-3 px-6 py-3 transition-colors 
+       {% if request.resolver_match.url_name == 'student_dashboard' %}
+      
+      
+      
+      
+      
+           bg-blue-50/50 text-primary border-r-4 border-primary
+
+
+
+
+
+    {% else %}
+      
+      
+      
+      
+      
+           text-[#616f89] hover:bg-gray-50
+
+
+
+
+
+    {% endif %}">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-medium text-sm">Dashboard</span>
+  </a>
+
+  <a href="{% url 'student:academics' %}"
+    class="flex items-center gap-3 px-6 py-3 transition-colors 
+       {% if request.resolver_match.url_name == 'academics' %}
+      
+      
+      
+      
+      
+           bg-blue-50/50 text-primary border-r-4 border-primary
+
+
+
+
+
+    {% else %}
+      
+      
+      
+      
+      
+           text-[#616f89] hover:bg-gray-50
+
+
+
+
+
+    {% endif %}">
+    <span class="material-symbols-outlined">school</span>
+    <span class="font-medium text-sm">Academics</span>
+  </a>
+
+  <a href="{% url 'student:assignments' %}"
+    class="flex items-center gap-3 px-6 py-3 transition-colors 
+       {% if request.resolver_match.url_name == 'assignments' %}
+      
+      
+      
+      
+      
+           bg-blue-50/50 text-primary border-r-4 border-primary
+
+
+
+
+
+    {% else %}
+      
+      
+      
+      
+      
+           text-[#616f89] hover:bg-gray-50
+
+
+
+
+
+    {% endif %}">
+    <span class="material-symbols-outlined">assignment</span>
+    <span class="font-medium text-sm">Assignments</span>
+  </a>
+
+  <a href="{% url 'student:fees' %}"
+    class="flex items-center gap-3 px-6 py-3 transition-colors 
+       {% if request.resolver_match.url_name == 'fees' %}
+      
+      
+      
+      
+      
+           bg-blue-50/50 text-primary border-r-4 border-primary
+
+
+
+
+
+    {% else %}
+      
+      
+      
+      
+      
+           text-[#616f89] hover:bg-gray-50
+
+
+
+
+
+    {% endif %}">
+    <span class="material-symbols-outlined">payments</span>
+    <span class="font-medium text-sm">Fees</span>
+  </a>
+
+  <a href="{% url 'student:profile' %}"
+    class="flex items-center gap-3 px-6 py-3 transition-colors 
+       {% if request.resolver_match.url_name == 'profile' %}
+      
+      
+      
+      
+      
+           bg-blue-50/50 text-primary border-r-4 border-primary
+
+
+
+
+
+    {% else %}
+      
+      
+      
+      
+      
+           text-[#616f89] hover:bg-gray-50
+
+
+
+
+
+    {% endif %}">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-medium text-sm">Profile</span>
+  </a>
+{% endblock %}
+{% block content %}
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <p class="text-sm text-slate-500">Welcome back,</p>
+      <h2 class="text-2xl font-bold">{{ student.name }}</h2>
+    </div>
+
+    <button class="bg-white p-3 rounded-full shadow hover:bg-gray-50 transition-colors"><span class="material-symbols-outlined text-gray-600">notifications</span></button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-primary text-white p-6 rounded-xl shadow transition-transform hover:-translate-y-1">
+      <p class="text-sm opacity-80">Overall GPA</p>
+      <h3 class="text-4xl font-bold mt-1">3.85</h3>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] p-6 rounded-xl shadow border border-transparent dark:border-white/10 transition-transform hover:-translate-y-1">
+      <p class="text-sm text-slate-500 dark:text-gray-400">Attendance</p>
+      <h3 class="text-3xl font-bold text-green-600 mt-1">92%</h3>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] p-6 rounded-xl shadow border border-transparent dark:border-white/10 transition-transform hover:-translate-y-1">
+      <p class="text-sm text-slate-500 dark:text-gray-400">Pending Tasks</p>
+      <h3 class="text-3xl font-bold text-orange-500 mt-1">3</h3>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] p-6 rounded-xl shadow border border-transparent dark:border-white/10 transition-transform hover:-translate-y-1">
+      <p class="text-sm text-slate-500 dark:text-gray-400">Fees Due</p>
+      <h3 class="text-3xl font-bold text-red-500 mt-1">$1250</h3>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 bg-white dark:bg-[#151b2b] p-6 rounded-xl shadow border border-transparent dark:border-white/10">
+      <div class="flex justify-between items-start">
+        <div>
+          <h3 class="font-bold text-lg mb-1 text-gray-800 dark:text-white">Next Class</h3>
+          <p class="text-xl font-semibold text-primary">Advanced Calculus</p>
+          <p class="text-slate-500 text-sm mt-1 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">schedule</span> 10:30 AM •
+            <span class="material-symbols-outlined text-sm ml-1">meeting_room</span> Room 402
+          </p>
+        </div>
+        <div class="size-12 bg-blue-50 rounded-full flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined">class</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] p-6 rounded-xl shadow border border-transparent dark:border-white/10">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-orange-500">campaign</span>
+        <h3 class="font-bold text-gray-800 dark:text-white">Announcement</h3>
+      </div>
+      <p class="text-sm text-slate-500 dark:text-gray-400 leading-relaxed">New campus library open 24/7 during finals week. Please bring your ID card for entry after 10 PM.</p>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] p-6 rounded-xl shadow border border-transparent dark:border-white/10">
+      <h3 class="font-bold mb-4 text-gray-800 dark:text-white border-b border-gray-100 dark:border-white/10 pb-2">Recent Results</h3>
+
+      <div class="flex justify-between mb-3 items-center">
+        <span class="text-slate-600 dark:text-gray-300 font-medium">Physics</span>
+        <span class="px-2 py-1 bg-blue-50 text-primary text-xs font-bold rounded">A-</span>
+      </div>
+
+      <div class="flex justify-between mb-3 items-center">
+        <span class="text-slate-600 dark:text-gray-300 font-medium">Economics</span>
+        <span class="px-2 py-1 bg-green-50 text-green-600 text-xs font-bold rounded">A</span>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <span class="text-slate-600 dark:text-gray-300 font-medium">Literature</span>
+        <span class="px-2 py-1 bg-orange-50 text-orange-500 text-xs font-bold rounded">B+</span>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] p-6 rounded-xl shadow border border-transparent dark:border-white/10">
+      <h3 class="font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2"><span class="material-symbols-outlined text-gray-400">assignment</span> Pending Tasks</h3>
+      <ul class="text-sm text-slate-600 dark:text-gray-400 space-y-3">
+        <li class="flex items-center gap-2">
+          <div class="size-2 bg-red-500 rounded-full"></div>Math Assignment
+        </li>
+        <li class="flex items-center gap-2">
+          <div class="size-2 bg-orange-500 rounded-full"></div>Physics Lab Report
+        </li>
+        <li class="flex items-center gap-2">
+          <div class="size-2 bg-blue-500 rounded-full"></div>Economics Presentation
+        </li>
+      </ul>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] p-6 rounded-xl shadow border border-transparent dark:border-white/10 flex flex-col justify-center items-center text-center">
+      <h3 class="font-bold mb-2 text-gray-800 dark:text-white">Attendance Summary</h3>
+
+      <div class="relative size-24 flex items-center justify-center my-2">
+        <svg class="size-full transform -rotate-90">
+          <circle class="text-gray-100" cx="48" cy="48" r="40" fill="none" stroke="currentColor" stroke-width="8"></circle>
+          <circle class="text-primary" cx="48" cy="48" r="40" fill="none" stroke="currentColor" stroke-width="8" stroke-dasharray="251" stroke-dashoffset="20"></circle>
+        </svg>
+        <span class="absolute text-2xl font-bold text-gray-800 dark:text-white">92%</span>
+      </div>
+
+      <p class="text-xs text-slate-500 mt-1">Monthly Average</p>
+    </div>
+  </div>
+{% endblock %}

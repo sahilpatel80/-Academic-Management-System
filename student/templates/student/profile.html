@@ -1,0 +1,184 @@
+{% extends 'student/base.html' %}
+{% load static %}
+
+{% block title %}
+  Profile | Academic Cloud
+{% endblock %}
+
+{% block header_title %}
+  Student Profile
+{% endblock %}
+
+{% block sidebar_menu %}
+  <a href="{% url 'student:student_dashboard' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-medium text-sm">Dashboard</span>
+  </a>
+
+  <a href="{% url 'student:attendance' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">event_available</span>
+    <span class="font-medium text-sm">Attendance</span>
+  </a>
+
+  <a href="{% url 'student:exam_results' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">assignment</span>
+    <span class="font-medium text-sm">Grades/Results</span>
+  </a>
+
+  <a href="{% url 'student:profile' %}" class="flex items-center gap-3 px-6 py-3 bg-blue-50/50 text-primary border-r-4 border-primary transition-colors">
+    <span class="material-symbols-outlined font-variation-settings-'FILL'-1">person</span>
+    <span class="font-medium text-sm">Profile</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+  <section class="bg-white dark:bg-[#151b2b] rounded-2xl shadow-soft p-8 flex flex-col md:flex-row gap-8 border border-[#dbdfe6] dark:border-white/10">
+    <div class="flex flex-col items-center">
+      <div class="size-32 rounded-full overflow-hidden shadow-lg border-4 border-white dark:border-gray-700 bg-gray-200 relative group">
+        {% if student.profile_pic %}
+          <img src="{{ student.profile_pic.url }}" onerror="this.onerror=null;this.src='{% static 'img/user.png' %}';" class="w-full h-full object-cover" />
+        {% else %}
+          <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+            <span class="material-symbols-outlined text-6xl">person</span>
+          </div>
+        {% endif %}
+        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+          <span class="material-symbols-outlined text-white">camera_alt</span>
+        </div>
+      </div>
+      <span class="mt-3 inline-flex items-center gap-1 text-green-600 dark:text-green-400 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-3 py-1 rounded-full border border-green-100 dark:border-green-900/30"><span class="size-2 rounded-full bg-green-500 animate-pulse"></span> Active</span>
+    </div>
+
+    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-background-light dark:bg-white/5 p-4 rounded-xl border border-transparent dark:border-white/5">
+        <p class="text-xs text-slate-400 uppercase font-bold">Name</p>
+        <p class="font-semibold text-gray-800 dark:text-white">{{ student.name }}</p>
+      </div>
+
+      <div class="bg-background-light dark:bg-white/5 p-4 rounded-xl border border-transparent dark:border-white/5">
+        <p class="text-xs text-slate-400 uppercase font-bold">Department</p>
+        <p class="font-semibold text-gray-800 dark:text-white">{{ student.department }}</p>
+      </div>
+
+      <div class="bg-background-light dark:bg-white/5 p-4 rounded-xl border border-transparent dark:border-white/5">
+        <p class="text-xs text-slate-400 uppercase font-bold">Roll No</p>
+        <p class="font-semibold text-gray-800 dark:text-white">{{ student.roll_no }}</p>
+      </div>
+
+      <div class="bg-background-light dark:bg-white/5 p-4 rounded-xl border border-transparent dark:border-white/5">
+        <p class="text-xs text-slate-400 uppercase font-bold">Student ID</p>
+        <p class="font-semibold text-gray-800 dark:text-white">{{ student.id }}</p>
+      </div>
+
+      <div class="col-span-1 md:col-span-2 bg-background-light dark:bg-white/5 p-4 rounded-xl border border-transparent dark:border-white/5 flex items-center gap-4">
+        <div class="size-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined">badge</span>
+        </div>
+        <div>
+          <p class="text-xs text-slate-400 uppercase font-bold">Enrollment No</p>
+          <p class="font-semibold text-gray-800 dark:text-white">{{ student.enrollment_no }}</p>
+        </div>
+      </div>
+
+      <div class="col-span-1 md:col-span-2 bg-background-light dark:bg-white/5 p-4 rounded-xl border border-transparent dark:border-white/5 flex items-center gap-4">
+        <div class="size-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined">mail</span>
+        </div>
+        <div>
+          <p class="text-xs text-slate-400 uppercase font-bold">Email Address</p>
+          <p class="font-semibold text-gray-800 dark:text-white">{{ student.user.email }}</p>
+        </div>
+      </div>
+
+      <div class="col-span-1 md:col-span-2 bg-background-light dark:bg-white/5 p-4 rounded-xl border border-transparent dark:border-white/5 flex items-center gap-4">
+        <div class="size-10 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600">
+          <span class="material-symbols-outlined">call</span>
+        </div>
+        <div>
+          <p class="text-xs text-slate-400 uppercase font-bold">Phone Number</p>
+          <p class="font-semibold text-gray-800 dark:text-white">{{ student.phone_number }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+    <section class="bg-white dark:bg-[#151b2b] rounded-2xl shadow-soft p-6 border border-[#dbdfe6] dark:border-white/10">
+      <h3 class="font-bold mb-6 text-gray-800 dark:text-white border-b border-gray-100 dark:border-white/10 pb-2">Attendance Overview</h3>
+
+      <div class="flex items-center gap-8">
+        <div class="relative size-32 flex items-center justify-center">
+          <svg class="size-full -rotate-90">
+            <circle cx="64" cy="64" r="56" fill="none" stroke="#e5e7eb" stroke-width="8" class="dark:stroke-gray-700" />
+            <circle cx="64" cy="64" r="56" fill="none" stroke="#0f49bd" stroke-dasharray="351" stroke-dashoffset="{{ attendance_offset }}" stroke-width="8" stroke-linecap="round" />
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center font-bold text-2xl text-gray-800 dark:text-white">{{ attendance_percentage }}%</div>
+        </div>
+
+        <div class="flex-1 space-y-3 text-sm">
+          <div class="flex justify-between items-center">
+            <span class="text-slate-500 dark:text-gray-400">Present Days</span>
+            <span class="font-bold text-gray-800 dark:text-white bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-green-600 dark:text-green-400">{{ present_days }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-500 dark:text-gray-400">Total Working Days</span>
+            <span class="font-bold text-gray-800 dark:text-white">{{ total_days }}</span>
+          </div>
+
+          {% if attendance_percentage >= 75 %}
+            <span class="inline-flex items-center gap-1 mt-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs px-3 py-1 rounded-full font-bold"><span class="material-symbols-outlined text-xs">check_circle</span> Good Standing</span>
+          {% else %}
+            <span class="inline-flex items-center gap-1 mt-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs px-3 py-1 rounded-full font-bold"><span class="material-symbols-outlined text-xs">warning</span> Low Attendance</span>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-[#151b2b] rounded-2xl shadow-soft p-6 border border-[#dbdfe6] dark:border-white/10">
+      <div class="flex justify-between mb-6">
+        <div>
+          <p class="text-sm text-slate-500 dark:text-gray-400">Current CGPA</p>
+          <p class="text-4xl font-bold text-gray-800 dark:text-white mt-1">8.85</p>
+        </div>
+        <div class="text-right">
+          <p class="text-xs text-slate-400 uppercase font-bold">Class Rank</p>
+          <p class="text-xl font-bold text-primary">
+            04 <span class="text-sm text-slate-400 font-normal">/ 60</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-end gap-3 h-32 mt-4">
+        <div class="flex-1 flex flex-col items-center gap-2 group">
+          <div class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-full relative overflow-hidden">
+            <div class="absolute bottom-0 w-full bg-blue-300 group-hover:bg-primary transition-all duration-500" style="height: 70%;"></div>
+          </div>
+          <span class="text-[10px] text-slate-400">Sem 1</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-2 group">
+          <div class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-full relative overflow-hidden">
+            <div class="absolute bottom-0 w-full bg-blue-400 group-hover:bg-primary transition-all duration-500" style="height: 75%;"></div>
+          </div>
+          <span class="text-[10px] text-slate-400">Sem 2</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-2 group">
+          <div class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-full relative overflow-hidden">
+            <div class="absolute bottom-0 w-full bg-blue-500 group-hover:bg-primary transition-all duration-500" style="height: 85%;"></div>
+          </div>
+          <span class="text-[10px] text-slate-400">Sem 3</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-2 group">
+          <div class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-full relative overflow-hidden">
+            <div class="absolute bottom-0 w-full bg-primary transition-all duration-500 shadow-[0_0_15px_rgba(15,73,189,0.4)]" style="height: 88%;"></div>
+          </div>
+          <span class="text-[10px] font-bold text-primary">Sem 4</span>
+        </div>
+      </div>
+
+      <p class="mt-4 text-xs text-slate-500 dark:text-gray-400 flex items-center gap-2 border-t border-gray-100 dark:border-white/5 pt-3">
+        <span class="material-symbols-outlined text-primary text-sm">trending_up</span>
+        Showing consistent improvement in grades.
+      </p>
+    </section>
+  </div>
+{% endblock %}

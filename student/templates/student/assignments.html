@@ -1,0 +1,119 @@
+{% extends 'student/base.html' %}
+{% load static %}
+
+{% block title %}
+  Assignments | Academic Cloud
+{% endblock %}
+
+{% block header_title %}
+  Assignments
+{% endblock %}
+
+{% block sidebar_menu %}
+  <a href="{% url 'student:student_dashboard' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-medium text-sm">Dashboard</span>
+  </a>
+
+  <a href="{% url 'student:assignments' %}" class="flex items-center gap-3 px-6 py-3 bg-blue-50/50 text-primary border-r-4 border-primary transition-colors">
+    <span class="material-symbols-outlined font-variation-settings-'FILL'-1">assignment</span>
+    <span class="font-medium text-sm">Assignments</span>
+  </a>
+
+  <a href="{% url 'student:classes' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">groups</span>
+    <span class="font-medium text-sm">Classes</span>
+  </a>
+
+  <a href="{% url 'student:chat' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">chat_bubble</span>
+    <span class="font-medium text-sm">Chat</span>
+  </a>
+
+  <a href="{% url 'student:profile' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-medium text-sm">Profile</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div class="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl">
+      <button class="bg-white dark:bg-[#151b2b] px-6 py-2 rounded-lg text-primary font-semibold shadow-sm transition-all">Pending</button>
+      <button class="px-6 py-2 text-gray-500 dark:text-gray-400 font-medium hover:text-gray-700 dark:hover:text-white transition-colors">Submitted</button>
+    </div>
+
+    <button class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg shadow transition-colors text-sm font-medium"><span class="material-symbols-outlined text-sm">add</span> Upload New</button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="bg-white dark:bg-[#151b2b] rounded-xl overflow-hidden shadow-soft border border-[#dbdfe6] dark:border-white/10 group hover:-translate-y-1 transition-transform duration-300">
+      <div class="h-40 bg-cover bg-center relative" style="background-image:url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=1000')">
+        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+        <span class="absolute top-3 right-3 bg-white/90 dark:bg-black/80 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-gray-800 dark:text-white backdrop-blur-sm">Due in 2 days</span>
+      </div>
+
+      <div class="p-5 space-y-3">
+        <div class="flex justify-between items-start">
+          <p class="text-primary text-xs font-bold uppercase tracking-wider">Chemistry</p>
+          <span class="material-symbols-outlined text-gray-400 text-lg">more_vert</span>
+        </div>
+
+        <h3 class="font-bold text-lg text-gray-800 dark:text-white leading-tight">Organic Chemistry Lab Report</h3>
+
+        <p class="text-sm text-slate-500 dark:text-gray-400 line-clamp-2">Complete the analysis of the esterification process including the final yield calculation.</p>
+
+        <div class="pt-3 flex justify-between items-center border-t border-gray-100 dark:border-white/5">
+          <span class="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-symbols-outlined text-sm">picture_as_pdf</span> PDF • 2.4 MB</span>
+          <button class="bg-primary/10 hover:bg-primary text-primary hover:text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] rounded-xl overflow-hidden shadow-soft border border-[#dbdfe6] dark:border-white/10 group hover:-translate-y-1 transition-transform duration-300">
+      <div class="h-40 bg-cover bg-center relative" style="background-image:url('https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&q=80&w=1000')">
+        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+        <span class="absolute top-3 right-3 bg-red-100 text-red-600 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Due Tomorrow</span>
+      </div>
+
+      <div class="p-5 space-y-3">
+        <div class="flex justify-between items-start">
+          <p class="text-purple-600 text-xs font-bold uppercase tracking-wider">History</p>
+          <span class="material-symbols-outlined text-gray-400 text-lg">more_vert</span>
+        </div>
+
+        <h3 class="font-bold text-lg text-gray-800 dark:text-white leading-tight">Industrial Revolution Essay</h3>
+
+        <p class="text-sm text-slate-500 dark:text-gray-400 line-clamp-2">Write a 1500 word essay on the socio-economic impacts of the steam engine.</p>
+
+        <div class="pt-3 flex justify-between items-center border-t border-gray-100 dark:border-white/5">
+          <span class="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-symbols-outlined text-sm">description</span> Docx • 1500 Words</span>
+          <button class="bg-primary/10 hover:bg-primary text-primary hover:text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-[#151b2b] rounded-xl overflow-hidden shadow-soft border border-[#dbdfe6] dark:border-white/10 group hover:-translate-y-1 transition-transform duration-300">
+      <div class="h-40 bg-cover bg-center relative" style="background-image:url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=1000')">
+        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+        <span class="absolute top-3 right-3 bg-white/90 dark:bg-black/80 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-gray-800 dark:text-white backdrop-blur-sm">Due in 5 days</span>
+      </div>
+
+      <div class="p-5 space-y-3">
+        <div class="flex justify-between items-start">
+          <p class="text-orange-600 text-xs font-bold uppercase tracking-wider">Mathematics</p>
+          <span class="material-symbols-outlined text-gray-400 text-lg">more_vert</span>
+        </div>
+
+        <h3 class="font-bold text-lg text-gray-800 dark:text-white leading-tight">Advanced Calculus Quiz</h3>
+
+        <p class="text-sm text-slate-500 dark:text-gray-400 line-clamp-2">Chapter 4: Limits and Continuity. 10 Multiple choice questions.</p>
+
+        <div class="pt-3 flex justify-between items-center border-t border-gray-100 dark:border-white/5">
+          <span class="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1"><span class="material-symbols-outlined text-sm">quiz</span> Quiz • 30 Mins</span>
+          <button class="bg-primary/10 hover:bg-primary text-primary hover:text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors">Start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

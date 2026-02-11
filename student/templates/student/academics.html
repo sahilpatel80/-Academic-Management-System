@@ -1,0 +1,216 @@
+{% extends 'student/base.html' %}
+{% load static %}
+
+{% block title %}
+  Academic Calendar | Academic Cloud
+{% endblock %}
+
+{% block header_title %}
+  Academic Calendar
+{% endblock %}
+
+{% block sidebar_menu %}
+  
+  <a href="{% url 'student:student_dashboard' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-medium text-sm">Dashboard</span>
+  </a>
+
+  <a href="{% url 'student:calendar' %}" class="flex items-center gap-3 px-6 py-3 bg-blue-50/50 text-primary border-r-4 border-primary transition-colors">
+    <span class="material-symbols-outlined font-variation-settings-'FILL'-1">calendar_month</span>
+    <span class="font-medium text-sm">Calendar</span>
+  </a>
+
+  <a href="{% url 'student:syllabus' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">school</span>
+    <span class="font-medium text-sm">Syllabus</span>
+  </a>
+
+  <a href="{% url 'student:profile' %}" class="flex items-center gap-3 px-6 py-3 text-[#616f89] hover:bg-gray-50 transition-colors">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-medium text-sm">Profile</span>
+  </a>
+
+{% endblock %}
+
+{% block content %}
+
+<style>
+  .day-3d { box-shadow: 4px 4px 10px #e0e5ec, -4px -4px 10px #ffffff; }
+  .text-exam { color: #ef4444; }
+  .text-event { color: #3b82f6; }
+  .text-holiday { color: #dc2626; }
+</style>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <section class="lg:col-span-2 bg-white dark:bg-[#151b2b] rounded-2xl shadow-soft p-6 border border-[#dbdfe6] dark:border-white/10">
+
+      <div class="flex justify-between items-center mb-6">
+        <button onclick="prevMonth()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-gray-600 dark:text-gray-300">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+
+        <h2 id="monthYear" class="text-xl font-bold text-gray-800 dark:text-white"></h2>
+
+        <button onclick="nextMonth()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-gray-600 dark:text-gray-300">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-7 text-center text-sm font-bold text-gray-500 dark:text-gray-400 mb-4">
+        <span class="text-red-500">Sun</span>
+        <span>Mon</span><span>Tue</span><span>Wed</span>
+        <span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+
+      <div id="calendar" class="grid grid-cols-7 gap-3"></div>
+
+    </section>
+
+    <aside class="bg-white dark:bg-[#151b2b] rounded-2xl shadow-soft p-6 border border-[#dbdfe6] dark:border-white/10 h-fit">
+      <h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">event</span> Upcoming
+      </h3>
+      <ul id="upcomingEvents" class="space-y-4 text-sm">
+          </ul>
+    </aside>
+
+</div>
+
+<div id="eventPopup" class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50 backdrop-blur-sm">
+  <div class="bg-white dark:bg-[#1e293b] rounded-2xl p-6 w-80 shadow-2xl transform transition-all scale-100">
+    <h3 id="popupTitle" class="text-lg font-bold mb-2 text-gray-800 dark:text-white"></h3>
+    <p id="popupDesc" class="text-gray-600 dark:text-gray-300 text-sm mb-4"></p>
+    <button onclick="closePopup()" class="w-full bg-primary hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+    const today = new Date();
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth(); 
+
+    // Dummy Data (Replace with Django context later)
+    const calendarData = {
+      "2026-1": { // February 2026 (Month is 0-indexed in JS)
+        exams: { 10: "Mid Semester Exam", 22: "Final Practical Exam" },
+        events: { 5: "Tech Workshop", 18: "Cultural Program" },
+        holidays: {}
+      }
+    };
+
+    const calendar = document.getElementById("calendar");
+    const monthYear = document.getElementById("monthYear");
+    const upcomingList = document.getElementById("upcomingEvents");
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    function renderCalendar() {
+      calendar.innerHTML = "";
+      upcomingList.innerHTML = "";
+
+      const key = `${currentYear}-${currentMonth}`;
+      const data = calendarData[key] || { exams:{}, events:{}, holidays:{} };
+
+      monthYear.textContent = `${months[currentMonth]} ${currentYear}`;
+
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      // Empty slots for previous month
+      for (let i = 0; i < firstDay; i++) {
+          calendar.innerHTML += `<div></div>`;
+      }
+
+      // Draw Days
+      for (let day = 1; day <= totalDays; day++) {
+        const date = new Date(currentYear, currentMonth, day);
+        const isSunday = date.getDay() === 0;
+
+        let color = "text-gray-700 dark:text-gray-300";
+        let bgClass = "bg-gray-50 dark:bg-white/5";
+        let label = "No Event";
+        let badge = "";
+
+        // Check Logic
+        if (data.exams[day]) {
+          color = "text-red-500 font-bold";
+          bgClass = "bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30";
+          label = data.exams[day];
+          badge = "<span class='size-1.5 rounded-full bg-red-500 block'></span>";
+          
+          upcomingList.innerHTML += `
+            <li class="flex items-start gap-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/10">
+                <div class="bg-white dark:bg-white/10 text-red-500 font-bold px-2 py-1 rounded text-center min-w-[40px]">
+                    <span class="text-xs block uppercase">${months[currentMonth].substr(0,3)}</span>
+                    <span class="text-lg leading-none">${day}</span>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-800 dark:text-white text-sm">${label}</p>
+                    <p class="text-xs text-red-500 mt-0.5 font-medium">Exam Day</p>
+                </div>
+            </li>`;
+        } else if (data.events[day]) {
+          color = "text-blue-500 font-bold";
+          bgClass = "bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/30";
+          label = data.events[day];
+          badge = "<span class='size-1.5 rounded-full bg-blue-500 block'></span>";
+
+          upcomingList.innerHTML += `
+            <li class="flex items-start gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/10">
+                <div class="bg-white dark:bg-white/10 text-blue-500 font-bold px-2 py-1 rounded text-center min-w-[40px]">
+                    <span class="text-xs block uppercase">${months[currentMonth].substr(0,3)}</span>
+                    <span class="text-lg leading-none">${day}</span>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-800 dark:text-white text-sm">${label}</p>
+                    <p class="text-xs text-blue-500 mt-0.5 font-medium">Campus Event</p>
+                </div>
+            </li>`;
+        } else if (isSunday) {
+           color = "text-red-400";
+           label = "Holiday";
+        }
+
+        calendar.innerHTML += `
+          <div onclick="showEvent(${day}, '${label}')"
+            class="relative h-14 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all hover:scale-105 hover:shadow-md ${bgClass}">
+            <span class="${color} text-sm">${day}</span>
+            <div class="mt-1">${badge}</div>
+          </div>
+        `;
+      }
+    }
+
+    function showEvent(day, text) {
+      if(text === 'No Event' || text === 'Holiday') return;
+      document.getElementById("popupTitle").innerText = `${day} ${months[currentMonth]} ${currentYear}`;
+      document.getElementById("popupDesc").innerText = text;
+      document.getElementById("eventPopup").classList.remove("hidden");
+      document.getElementById("eventPopup").classList.add("flex");
+    }
+
+    function closePopup() {
+      document.getElementById("eventPopup").classList.add("hidden");
+      document.getElementById("eventPopup").classList.remove("flex");
+    }
+
+    function prevMonth() {
+      currentMonth--;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      renderCalendar();
+    }
+
+    function nextMonth() {
+      currentMonth++;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      renderCalendar();
+    }
+
+    // Initialize
+    renderCalendar();
+</script>
+
+{% endblock %}

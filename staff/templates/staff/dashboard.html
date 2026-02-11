@@ -1,0 +1,123 @@
+{% extends 'staff/base.html' %}
+{% load static %}
+
+{% block title %}
+  Staff Dashboard
+{% endblock %}
+{% block header_title %}
+  Overview
+{% endblock %}
+
+{% block sidebar_menu %}
+  <a href="{% url 'staff:staff_dashboard' %}" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-lg font-medium">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="font-medium text-sm">Dashboard</span>
+  </a>
+
+  <a href="{% url 'staff:staff_profile' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
+    <span class="material-icons text-xl">person</span>
+    Profile
+  </a>
+
+  <a href="{% url 'staff:staff_timetable' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
+    <span class="material-icons text-xl">calendar_today</span>
+    Timetable
+  </a>
+
+  <a href="{% url 'staff:staff_students' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
+    <span class="material-icons text-xl">group</span>
+    Students
+  </a>
+
+  <a href="{% url 'staff:staff_attendance' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
+    <span class="material-icons text-xl">fact_check</span>
+    Attendance
+  </a>
+  {% comment %}
+  <a href="{% url 'staff:staff_online_classes' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
+    <span class="material-icons text-xl">videocam</span>
+    Online Classes
+  </a> {% endcomment %}
+{% endblock %}
+
+{% block content %}
+  <!-- TOP WELCOME -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-2xl font-bold">Welcome back, {{ staff.user.get_full_name }}</h1>
+      <p class="text-slate-500 text-sm">{{ staff.designation }}, {{ staff.department }}</p>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-sm border">
+      <h3 class="text-3xl font-bold">{{ subjects_count }}</h3>
+      <p class="text-sm text-slate-500">Assigned Subjects</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border">
+      <h3 class="text-3xl font-bold">{{ students_count }}</h3>
+      <p class="text-sm text-slate-500">Active Students</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border">
+      <h3 class="text-3xl font-bold">{{ lecture_hours }}h</h3>
+      <p class="text-sm text-slate-500">Lecture Hours</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border">
+      <h3 class="text-3xl font-bold">{{ pending_tasks }}</h3>
+      <p class="text-sm text-slate-500">Tasks to Review</p>
+    </div>
+  </div>
+
+  <!-- TOMORROW SCHEDULE -->
+  <div class="bg-white rounded-xl shadow-sm border overflow-hidden mb-8">
+    <div class="p-6 border-b flex justify-between">
+      <h2 class="text-lg font-bold">Tomorrow’s Schedule</h2>
+      <span class="text-sm text-slate-500">{{ tomorrow_date }}</span>
+    </div>
+
+    <table class="w-full text-left">
+      <thead class="bg-slate-50 text-xs uppercase">
+        <tr>
+          <th class="px-6 py-4">Time</th>
+          <th class="px-6 py-4">Subject</th>
+          <th class="px-6 py-4">Class / Room</th>
+          <th class="px-6 py-4 text-right">Action</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y">
+        {% for lecture in tomorrow_lectures %}
+          <tr>
+            <td class="px-6 py-4">{{ lecture.time }}</td>
+            <td class="px-6 py-4">
+              {{ lecture.subject.name }}
+              <div class="text-xs text-slate-500">{{ lecture.subject.code }}</div>
+            </td>
+            <td class="px-6 py-4">
+              {% if lecture.is_online %}
+                <span class="text-primary">Online</span>
+              {% else %}
+                {{ lecture.room }}
+              {% endif %}
+            </td>
+            <td class="px-6 py-4 text-right">
+              {% if lecture.is_online %}
+                <a href="{{ lecture.meeting_link }}" class="text-primary font-semibold">Join</a>
+              {% else %}
+                <span class="text-slate-400">—</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4" class="px-6 py-6 text-center text-slate-500">No lectures scheduled</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
