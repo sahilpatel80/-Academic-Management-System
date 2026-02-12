@@ -30,9 +30,10 @@ from django.urls import path
 from . import views
 
 app_name = 'core'
-urlpatterns = [
 
-    path('', views.user_login, name='login'),
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('login/', views.user_login, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('signup/', views.student_signup, name='signup'),
     # path('send-otp/', views.send_otp, name='send_otp'),

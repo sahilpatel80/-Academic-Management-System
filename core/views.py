@@ -7,6 +7,12 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserSignupForm, StudentSignupForm
 
 
+def home(request):
+    # if request.user.is_authenticated:
+    #     return redirect('core:login_redirect')
+    return redirect('core:login')
+
+
 def student_signup(request):
     classes = ClassName.objects.all()
 
@@ -59,12 +65,13 @@ def student_signup(request):
 def user_login(request):
     # 1. If the user is already authenticated, redirect them to their respective dashboard
     if request.user.is_authenticated:
-        if hasattr(request.user, 'student'):
-            return redirect('student:student_dashboard')
-        elif hasattr(request.user, 'staff'):
-            return redirect('staff:staff_dashboard')
-        elif request.user.is_superuser:
-            return redirect('admin_dashboard')
+        return redirect('core:login_redirect')
+    if hasattr(request.user, 'student'):
+        return redirect('student:student_dashboard')
+    elif hasattr(request.user, 'staff'):
+        return redirect('staff:staff_dashboard')
+    elif request.user.is_superuser:
+        return redirect('school_admin:admin_dashboard')
 
     # 2. Handle Form Submission
     if request.method == "POST":
@@ -72,10 +79,10 @@ def user_login(request):
         role = request.POST.get("role")
         username = request.POST.get("username")
         password = request.POST.get("password")
-        enrollment_no = request.POST.get('enrollment_no')
+        # enrollment_no = request.POST.get('enrollment_no')
 
         user = authenticate(request, username=username,
-                            password=password, enrollment_no=enrollment_no)
+                            password=password)
 
         if user is not None:
             # --- START STRICT ROLE ENFORCEMENT ---
@@ -94,7 +101,7 @@ def user_login(request):
             elif role == 'staff':
                 if hasattr(user, 'staff'):    # Check: Does a Staff profile exist for this user?
                     login(request, user)
-                    return redirect('staff_dashboard')
+                    return redirect('staff:staff_dashboard')
                 else:
                     messages.error(
                         request, "Access Denied: This account is not registered as Staff.")
@@ -103,7 +110,7 @@ def user_login(request):
             elif role == 'admin':
                 if user.is_superuser:         # Check: Is the user a Superuser?
                     login(request, user)
-                    return redirect('admin_dashboard')
+                    return redirect('school_admin:admin_dashboard')
                 else:
                     messages.error(
                         request, "Access Denied: You do not have Administrator privileges.")

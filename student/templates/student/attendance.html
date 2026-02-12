@@ -42,7 +42,7 @@
           </div>
           <div class="flex items-center gap-2">
             <a href="{{ prev_link }}" class="size-9 flex items-center justify-center rounded-lg border border-[#dbdfe6] hover:bg-gray-50 transition-colors"><span class="material-symbols-outlined text-lg">chevron_left</span></a>
-            <a href="{% url 'attendance' %}" class="size-9 flex items-center justify-center rounded-lg border border-[#dbdfe6] hover:bg-gray-50 transition-colors"><span class="material-symbols-outlined text-lg">today</span></a>
+            <a href="{% url 'student:attendance' %}" class="size-9 flex items-center justify-center rounded-lg border border-[#dbdfe6] hover:bg-gray-50 transition-colors"><span class="material-symbols-outlined text-lg">today</span></a>
             <a href="{{ next_link }}" class="size-9 flex items-center justify-center rounded-lg border border-[#dbdfe6] hover:bg-gray-50 transition-colors"><span class="material-symbols-outlined text-lg">chevron_right</span></a>
           </div>
         </div>
@@ -110,11 +110,19 @@
                 <div class="flex items-center gap-3">
                   <div class="size-10 rounded-lg {% if sub.percentage >= 75 %}
                       
+                      
+                      
                       bg-green-50 text-green-600
+
+
 
                     {% else %}
                       
+                      
+                      
                       bg-red-50 text-red-600
+
+
 
                     {% endif %} flex items-center justify-center">
                     <span class="material-symbols-outlined">
@@ -133,11 +141,19 @@
                 <div class="text-right">
                   <span class="text-sm font-bold {% if sub.percentage >= 75 %}
                       
+                      
+                      
                       text-green-600
+
+
 
                     {% else %}
                       
+                      
+                      
                       text-red-600
+
+
 
                     {% endif %}">
                     {{ sub.percentage }}%
@@ -148,11 +164,19 @@
               <div class="h-1.5 bg-[#dbdfe6] rounded-full overflow-hidden">
                 <div class="h-full {% if sub.percentage >= 75 %}
                     
+                    
+                    
                     bg-green-500
+
+
 
                   {% else %}
                     
+                    
+                    
                     bg-red-500
+
+
 
                   {% endif %} rounded-full"
                   style="width: {{ sub.percentage }}%;"></div>

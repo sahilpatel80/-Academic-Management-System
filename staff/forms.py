@@ -3,15 +3,15 @@ from core.models import Staff
 from django.contrib.auth.models import User
 from core.forms import UserSignupForm
 
-# # 1. Login Details Form (Username, Password)
+# 1. Login Details Form (Username, Password)
 
 
-# class UserSignupForm(forms.ModelForm):
-#     password = forms.CharField(widget=forms.PasswordInput)
+class UserSignupForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
 
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'password']
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
 
 # 2. Student Details Form
 

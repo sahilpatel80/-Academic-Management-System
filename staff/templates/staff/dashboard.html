@@ -2,122 +2,211 @@
 {% load static %}
 
 {% block title %}
-  Staff Dashboard
+  Staff Dashboard | Academic Cloud
 {% endblock %}
+
 {% block header_title %}
-  Overview
+  Dashboard
 {% endblock %}
 
 {% block sidebar_menu %}
-  <a href="{% url 'staff:staff_dashboard' %}" class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-lg font-medium">
+  <a href="{% url 'staff:staff_dashboard' %}"
+    class="flex items-center gap-3 px-6 py-3 transition-colors 
+        {% if request.resolver_match.url_name == 'staff_dashboard' %}
+      
+      
+      
+           bg-blue-50/50 text-primary border-r-4 border-primary
+
+
+
+    {% else %}
+      
+      
+      
+           text-[#616f89] hover:bg-gray-50
+
+
+
+    {% endif %}">
     <span class="material-symbols-outlined">dashboard</span>
     <span class="font-medium text-sm">Dashboard</span>
   </a>
 
-  <a href="{% url 'staff:staff_profile' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
-    <span class="material-icons text-xl">person</span>
-    Profile
+  <a href="#" class="flex items-center gap-3 px-6 py-3 transition-colors text-[#616f89] hover:bg-gray-50">
+    <span class="material-symbols-outlined">group</span>
+    <span class="font-medium text-sm">My Students</span>
   </a>
 
-  <a href="{% url 'staff:staff_timetable' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
-    <span class="material-icons text-xl">calendar_today</span>
-    Timetable
+  <a href="#" class="flex items-center gap-3 px-6 py-3 transition-colors text-[#616f89] hover:bg-gray-50">
+    <span class="material-symbols-outlined">fact_check</span>
+    <span class="font-medium text-sm">Attendance</span>
   </a>
 
-  <a href="{% url 'staff:staff_students' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
-    <span class="material-icons text-xl">group</span>
-    Students
+  <a href="#" class="flex items-center gap-3 px-6 py-3 transition-colors text-[#616f89] hover:bg-gray-50">
+    <span class="material-symbols-outlined">calendar_month</span>
+    <span class="font-medium text-sm">Timetable</span>
   </a>
-
-  <a href="{% url 'staff:staff_attendance' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
-    <span class="material-icons text-xl">fact_check</span>
-    Attendance
-  </a>
-  {% comment %}
-  <a href="{% url 'staff:staff_online_classes' %}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg">
-    <span class="material-icons text-xl">videocam</span>
-    Online Classes
-  </a> {% endcomment %}
 {% endblock %}
 
 {% block content %}
-  <!-- TOP WELCOME -->
-  <div class="flex items-center justify-between mb-8">
+  <div class="flex justify-between items-center mb-8">
     <div>
-      <h1 class="text-2xl font-bold">Welcome back, {{ staff.user.get_full_name }}</h1>
-      <p class="text-slate-500 text-sm">{{ staff.designation }}, {{ staff.department }}</p>
+      <p class="text-sm text-slate-500">Welcome back,</p>
+      <h2 class="text-2xl font-bold text-gray-800">{{ staff.name }}</h2>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 uppercase tracking-wider">{{ staff.designation }}</span>
+        <span class="text-xs text-slate-400">• {{ staff.department }}</span>
+      </div>
     </div>
+
+    <button class="bg-white p-3 rounded-full shadow hover:bg-gray-50 transition-colors"><span class="material-symbols-outlined text-gray-600">notifications</span></button>
   </div>
 
-  <!-- STATS -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-xl shadow-sm border">
-      <h3 class="text-3xl font-bold">{{ subjects_count }}</h3>
-      <p class="text-sm text-slate-500">Assigned Subjects</p>
+    <div class="bg-primary text-white p-6 rounded-xl shadow transition-transform hover:-translate-y-1 cursor-default">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm opacity-80">Assigned Subjects</p>
+          <h3 class="text-4xl font-bold mt-1">{{ subjects_count }}</h3>
+        </div>
+        <div class="p-2 bg-white/20 rounded-lg">
+          <span class="material-symbols-outlined">auto_stories</span>
+        </div>
+      </div>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow-sm border">
-      <h3 class="text-3xl font-bold">{{ students_count }}</h3>
-      <p class="text-sm text-slate-500">Active Students</p>
+    <div class="bg-white p-6 rounded-xl shadow border border-transparent transition-transform hover:-translate-y-1 cursor-default">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm text-slate-500">Active Students</p>
+          <h3 class="text-3xl font-bold text-green-600 mt-1">{{ students_count }}</h3>
+        </div>
+        <div class="p-2 bg-green-50 rounded-lg text-green-600">
+          <span class="material-symbols-outlined">groups</span>
+        </div>
+      </div>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow-sm border">
-      <h3 class="text-3xl font-bold">{{ lecture_hours }}h</h3>
-      <p class="text-sm text-slate-500">Lecture Hours</p>
+    <div class="bg-white p-6 rounded-xl shadow border border-transparent transition-transform hover:-translate-y-1 cursor-default">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm text-slate-500">Lecture Hours</p>
+          <h3 class="text-3xl font-bold text-orange-500 mt-1">{{ lecture_hours }}h</h3>
+        </div>
+        <div class="p-2 bg-orange-50 rounded-lg text-orange-500">
+          <span class="material-symbols-outlined">schedule</span>
+        </div>
+      </div>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow-sm border">
-      <h3 class="text-3xl font-bold">{{ pending_tasks }}</h3>
-      <p class="text-sm text-slate-500">Tasks to Review</p>
+    <div class="bg-white p-6 rounded-xl shadow border border-transparent transition-transform hover:-translate-y-1 cursor-default">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm text-slate-500">Tasks to Review</p>
+          <h3 class="text-3xl font-bold text-red-500 mt-1">{{ pending_tasks }}</h3>
+        </div>
+        <div class="p-2 bg-red-50 rounded-lg text-red-500">
+          <span class="material-symbols-outlined">assignment_late</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- TOMORROW SCHEDULE -->
-  <div class="bg-white rounded-xl shadow-sm border overflow-hidden mb-8">
-    <div class="p-6 border-b flex justify-between">
-      <h2 class="text-lg font-bold">Tomorrow’s Schedule</h2>
-      <span class="text-sm text-slate-500">{{ tomorrow_date }}</span>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow border border-transparent">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="font-bold text-lg text-gray-800">Tomorrow's Schedule</h3>
+          <p class="text-xs text-slate-400">{{ tomorrow_date }}</p>
+        </div>
+        <a href="#" class="text-sm text-primary font-medium hover:underline">View Full Timetable</a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-slate-50 text-xs uppercase text-slate-500 font-semibold">
+            <tr>
+              <th class="px-4 py-3 rounded-l-lg">Time</th>
+              <th class="px-4 py-3">Subject</th>
+              <th class="px-4 py-3">Location</th>
+              <th class="px-4 py-3 rounded-r-lg text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm text-slate-600">
+            {% for lecture in tomorrow_lectures %}
+              <tr class="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
+                <td class="px-4 py-4 font-medium text-gray-800">{{ lecture.start_time }}</td>
+
+                <td class="px-4 py-4">
+                  <div class="font-semibold text-gray-800">{{ lecture.subject.name }}</div>
+                  <div class="text-xs text-slate-400">{{ lecture.subject.course_code }}</div>
+                </td>
+
+                <td class="px-4 py-4">
+                  {% if lecture.is_online %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600"><span class="material-symbols-outlined text-[14px]">videocam</span> Online</span>
+                  {% else %}
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600"><span class="material-symbols-outlined text-[14px]">meeting_room</span> {{ lecture.room }}</span>
+                  {% endif %}
+                </td>
+
+                <td class="px-4 py-4 text-right">
+                  {% if lecture.is_online %}
+                    <a href="{{ lecture.meeting_link|default:'#' }}" target="_blank" class="text-primary font-bold text-xs hover:underline">JOIN CLASS</a>
+                  {% else %}
+                    <span class="text-slate-300 text-xs">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="px-6 py-8 text-center">
+                  <div class="flex flex-col items-center justify-center text-slate-400">
+                    <span class="material-symbols-outlined text-4xl mb-2 text-slate-300">event_busy</span>
+                    <p>No lectures scheduled for tomorrow.</p>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <table class="w-full text-left">
-      <thead class="bg-slate-50 text-xs uppercase">
-        <tr>
-          <th class="px-6 py-4">Time</th>
-          <th class="px-6 py-4">Subject</th>
-          <th class="px-6 py-4">Class / Room</th>
-          <th class="px-6 py-4 text-right">Action</th>
-        </tr>
-      </thead>
+    <div class="flex flex-col gap-6">
+      <div class="bg-white p-6 rounded-xl shadow border border-transparent">
+        <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2"><span class="material-symbols-outlined text-primary">bolt</span> Quick Actions</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <button class="flex flex-col items-center justify-center p-3 rounded-lg bg-blue-50 text-primary hover:bg-blue-100 transition-colors">
+            <span class="material-symbols-outlined mb-1">fact_check</span>
+            <span class="text-xs font-bold">Attendance</span>
+          </button>
+          <button class="flex flex-col items-center justify-center p-3 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors">
+            <span class="material-symbols-outlined mb-1">upload_file</span>
+            <span class="text-xs font-bold">Marks</span>
+          </button>
+          <button class="flex flex-col items-center justify-center p-3 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors">
+            <span class="material-symbols-outlined mb-1">add_task</span>
+            <span class="text-xs font-bold">Assignment</span>
+          </button>
+          <button class="flex flex-col items-center justify-center p-3 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition-colors">
+            <span class="material-symbols-outlined mb-1">calendar_add_on</span>
+            <span class="text-xs font-bold">Extra Class</span>
+          </button>
+        </div>
+      </div>
 
-      <tbody class="divide-y">
-        {% for lecture in tomorrow_lectures %}
-          <tr>
-            <td class="px-6 py-4">{{ lecture.time }}</td>
-            <td class="px-6 py-4">
-              {{ lecture.subject.name }}
-              <div class="text-xs text-slate-500">{{ lecture.subject.code }}</div>
-            </td>
-            <td class="px-6 py-4">
-              {% if lecture.is_online %}
-                <span class="text-primary">Online</span>
-              {% else %}
-                {{ lecture.room }}
-              {% endif %}
-            </td>
-            <td class="px-6 py-4 text-right">
-              {% if lecture.is_online %}
-                <a href="{{ lecture.meeting_link }}" class="text-primary font-semibold">Join</a>
-              {% else %}
-                <span class="text-slate-400">—</span>
-              {% endif %}
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="4" class="px-6 py-6 text-center text-slate-500">No lectures scheduled</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+      <div class="bg-white p-6 rounded-xl shadow border border-transparent">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="material-symbols-outlined text-orange-500">campaign</span>
+          <h3 class="font-bold text-gray-800">Dept. Notice</h3>
+        </div>
+        <div class="p-3 bg-orange-50 border-l-4 border-orange-400 rounded-r-md">
+          <p class="text-xs font-bold text-orange-800 mb-1">Faculty Meeting</p>
+          <p class="text-xs text-orange-700 leading-relaxed">Monthly review meeting scheduled for Friday at 2:00 PM in Conference Room A.</p>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}
